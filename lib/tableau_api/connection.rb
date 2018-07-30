@@ -77,8 +77,10 @@ module TableauApi
         args[0] = {} unless args[0]
         args[0][:headers] = auth_headers
       end
-      
-      args << { timeout: 10 }
+
+      args[0] = {} unless args[0]
+      args[0][:timeout] = 10
+
       self.class.send(method, url_for(path), *args)
     end
 
