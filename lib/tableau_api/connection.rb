@@ -64,7 +64,7 @@ module TableauApi
 
       req = Net::HTTP::Post::Multipart.new(uri.to_s, parts, headers)
 
-      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
+      Net::HTTP.start(uri.host, uri.port, read_timeout: 10, use_ssl: uri.scheme == 'https') do |http|
         http.request(req)
       end
     end
@@ -77,6 +77,8 @@ module TableauApi
         args[0] = {} unless args[0]
         args[0][:headers] = auth_headers
       end
+      
+      args << { timeout: 10 }
       self.class.send(method, url_for(path), *args)
     end
 
