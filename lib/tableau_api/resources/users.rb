@@ -9,7 +9,8 @@ module TableauApi
         UnlicensedWithPublish
         Viewer
         ViewerWithPublish
-      ).freeze
+        Explorer
+        ).freeze
 
       def create(username:, site_role: 'Viewer')
         raise 'invalid site_role' unless SITE_ROLES.include? site_role
