@@ -45,6 +45,21 @@ module TableauApi
 
         res['tsResponse']['user'] if res.code == 200
       end
+
+      #currently we create users via the gem with role as explorer, hence we limit the deletion of the users to only with role as explorer
+      def delete(user_id:, site_role: 'Explorer')
+        raise 'invalid site_role' unless SITE_ROLES.include? site_role
+        res_get_user = @client.connection.api_get("sites/#{@client.auth.site_id}/users/#{user_id}")
+        raise 'failed to find user' if res_get_user.code != 200
+        if res_get_user['tsResponse']['user']['siteRole'] == site_role
+          res = @client.connection.api_delete("sites/#{@client.auth.site_id}/users/#{user_id}")
+          return true if res.code == 204
+          raise 'unable to delete user'
+        else
+          raise 'invalid operation'
+        end
+      end
+
     end
   end
 end
